@@ -276,22 +276,6 @@ void WebServer::handle_js_request(AsyncWebServerRequest *request) {
 }
 #endif
 
-void WebServer::addOriginHeader(AsyncWebServerResponse *response) {
-  if (js_enable_cors_)
-    response->addHeader("Access-Control-Allow-Origin", js_cors_header_);
-}
-
-void WebServer::sendResponse(AsyncWebServerRequest *request,int code, const String& contentType, const String& content){
-  AsyncWebServerResponse *response = request->beginResponse(code,contentType, content);
-  addOriginHeader(response);
-  request->send(response);
-}
-void WebServer::sendResponse(AsyncWebServerRequest *request,int code){
-  AsyncWebServerResponse *response = request->beginResponse(code);
-  addOriginHeader(response);
-  request->send(response);
-}
-
 #ifdef USE_SENSOR
 void WebServer::on_sensor_update(sensor::Sensor *obj, float state) {
   this->events_.send(this->sensor_json(obj, state).c_str(), "state");
