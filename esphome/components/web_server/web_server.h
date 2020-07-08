@@ -3,6 +3,9 @@
 #include "esphome/core/component.h"
 #include "esphome/core/controller.h"
 #include "esphome/components/web_server_base/web_server_base.h"
+#ifdef WEBSERVER_PROMETHEUS
+#include "esphome/components/web_server/web_server_prometheus.h"
+#endif
 
 #include <vector>
 
@@ -193,6 +196,10 @@ class WebServer : public Controller, public Component, public AsyncWebHandler {
   // send response to request with http-code
   void send_response_(AsyncWebServerRequest *request, int code);
   const char *js_include_{nullptr};
+
+#ifdef WEBSERVER_PROMETHEUS
+  WebServerPrometheus prometheus;
+#endif
 };
 
 }  // namespace web_server
