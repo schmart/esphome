@@ -83,6 +83,9 @@ class WaveshareEPaperTypeA : public WaveshareEPaper {
 
   void deep_sleep() override {
     // COMMAND DEEP SLEEP MODE
+    this->command(0x22);
+    this->data(0xc3);
+    this->command(0x20);
     this->command(0x10);
     this->wait_until_idle_();
   }
