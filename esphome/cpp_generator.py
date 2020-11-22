@@ -233,9 +233,15 @@ class IntLiteral(Literal):
 
 
 << << << < HEAD
+
+
+<< << << < HEAD
 == == == =
         super().__init__()
 >>>>>> > aea2e9a6bb08936cb40463718c96381377d4182c
+== == == =
+        super().__init__()
+>>>>>> > 3bd05bb2331f1a2386d21ec503b5d3f2c61edd8a
         self.i = i
 
     def __str__(self):
@@ -275,6 +281,10 @@ class FloatLiteral(Literal):
 
     def __init__(self, value: float):
         super().__init__()
+        self.f = value
+
+    def __str__(self):
+        if math.isnan(self.f):
             return "NAN"
         return f"{self.f}f"
 

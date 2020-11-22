@@ -171,6 +171,23 @@ void WaveshareEPaperTypeA::initialize() {
   this->command(0x3A);
   this->data(0x1A);
 
+  this->command(0x3C); //BorderWavefrom
+  this->data(0x03);
+
+  // this->command(0x2C); //VCOM Voltage
+  // this->data(0x50);    //
+  this->command(0x03); //Gate Driving voltage Control
+  this->data(0x15);    // 19V
+  this->command(0x04); //Source Driving voltage Control
+  this->data(0x41);    // VSH1 15V
+  this->data(0xA8);    // VSH2 5V
+  this->data(0x32);    // VSL -15V
+  // this->command(0x3A); //Dummy Line
+  // this->data(0x2C);
+  // this->command(0x3B); //Gate time
+  // this->data(0x0B);
+
+
   // COMMAND SET GATE TIME
   this->command(0x3B);
   this->data(0x08);  // 2µs per row

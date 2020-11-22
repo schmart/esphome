@@ -1233,8 +1233,8 @@ light:
       - wled:
           port: 11111
 
-      - adalight:
-          uart_id: adalight_uart
+    - adalight:
+        uart_id: adalight_uart
 
       - automation:
           name: Custom Effect
@@ -1767,36 +1767,36 @@ globals:
     # initial_value: ""
 
 text_sensor:
-  - platform: mqtt_subscribe
-    name: "MQTT Subscribe Text"
-    topic: "the/topic"
-    qos: 2
-    on_value:
-      - text_sensor.template.publish:
-          id: template_text
-          state: Hello World
-      - text_sensor.template.publish:
-          id: template_text
-          state: |-
-            return "Hello World2";
-      - globals.set:
-          id: glob_int
-          value: "0"
-  - platform: template
-    name: Template Text Sensor
-    id: template_text
-  - platform: wifi_info
-    ip_address:
-      name: "IP Address"
-    ssid:
-      name: "SSID"
-    bssid:
-      name: "BSSID"
-    mac_address:
-      name: "Mac Address"
-  - platform: version
-    name: "ESPHome Version No Timestamp"
-    hide_timestamp: True
+- platform: mqtt_subscribe
+  name: "MQTT Subscribe Text"
+  topic: "the/topic"
+  qos: 2
+  on_value:
+  - text_sensor.template.publish:
+      id: template_text
+      state: Hello World
+  - text_sensor.template.publish:
+      id: template_text
+      state: |-
+        return "Hello World2";
+  - globals.set:
+      id: glob_int
+      value: '0'
+- platform: template
+  name: Template Text Sensor
+  id: template_text
+- platform: wifi_info
+  ip_address:
+    name: "IP Address"
+  ssid:
+    name: "SSID"
+  bssid:
+    name: "BSSID"
+  mac_address:
+    name: "Mac Address"
+- platform: version
+  name: "ESPHome Version No Timestamp"
+  hide_timestamp: True
 
 sn74hc595:
   - id: "sn74hc595_hub"
