@@ -219,6 +219,7 @@ class StringLiteral(Literal):
     __slots__ = ("string", )
 
     def __init__(self, string: str):
+        super().__init__()
         self.string = string
 
     def __str__(self):
@@ -229,6 +230,12 @@ class IntLiteral(Literal):
     __slots__ = ("i", )
 
     def __init__(self, i: int):
+
+
+<< << << < HEAD
+== == == =
+        super().__init__()
+>>>>>> > aea2e9a6bb08936cb40463718c96381377d4182c
         self.i = i
 
     def __str__(self):
@@ -256,6 +263,7 @@ class HexIntLiteral(Literal):
     __slots__ = ("i", )
 
     def __init__(self, i: int):
+        super().__init__()
         self.i = HexInt(i)
 
     def __str__(self):
@@ -266,10 +274,7 @@ class FloatLiteral(Literal):
     __slots__ = ("f", )
 
     def __init__(self, value: float):
-        self.f = value
-
-    def __str__(self):
-        if math.isnan(self.f):
+        super().__init__()
             return "NAN"
         return f"{self.f}f"
 

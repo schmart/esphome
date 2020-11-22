@@ -14,10 +14,12 @@ esphome:
 substitutions:
   devicename: test3
   devicecomment: test3 device
+  min_sub: "0.03"
+  max_sub: "12.0%"
 
 api:
   port: 8000
-  password: 'pwd'
+  password: "pwd"
   reboot_timeout: 0min
   services:
     - service: hello_world
@@ -25,12 +27,12 @@ api:
         name: string
       then:
         - logger.log:
-            format: 'Hello World %s!'
+            format: "Hello World %s!"
             args:
               - name.c_str()
     - service: empty_service
       then:
-        - logger.log: 'Service Called'
+        - logger.log: "Service Called"
     - service: all_types
       variables:
         bool_: bool
@@ -38,10 +40,10 @@ api:
         float_: float
         string_: string
       then:
-        - logger.log: 'Something happened'
+        - logger.log: "Something happened"
         - stepper.set_target:
             id: my_stepper2
-            target: !lambda 'return int_;'
+            target: !lambda "return int_;"
     - service: array_types
       variables:
         bool_arr: bool[]
@@ -50,7 +52,7 @@ api:
         string_arr: string[]
       then:
         - logger.log:
-            format: 'Bool: %s (%u), Int: %d (%u), Float: %f (%u), String: %s (%u)'
+            format: "Bool: %s (%u), Int: %d (%u), Float: %f (%u), String: %s (%u)"
             args:
               - YESNO(bool_arr[0])
               - bool_arr.size()
@@ -70,30 +72,30 @@ api:
       variables:
         file: int
       then:
-        - dfplayer.play: !lambda 'return file;'
+        - dfplayer.play: !lambda "return file;"
     - service: dfplayer_play_loop
       variables:
         file: int
         loop_: bool
       then:
         - dfplayer.play:
-            file: !lambda 'return file;'
-            loop: !lambda 'return loop_;'
+            file: !lambda "return file;"
+            loop: !lambda "return loop_;"
     - service: dfplayer_play_folder
       variables:
         folder: int
         file: int
       then:
         - dfplayer.play_folder:
-            folder: !lambda 'return folder;'
-            file: !lambda 'return file;'
+            folder: !lambda "return folder;"
+            file: !lambda "return file;"
 
     - service: dfplayer_play_loo_folder
       variables:
         folder: int
       then:
         - dfplayer.play_folder:
-            folder: !lambda 'return folder;'
+            folder: !lambda "return folder;"
             loop: True
 
     - service: dfplayer_set_device
@@ -107,12 +109,12 @@ api:
       variables:
         volume: int
       then:
-        - dfplayer.set_volume: !lambda 'return volume;'
+        - dfplayer.set_volume: !lambda "return volume;"
     - service: dfplayer_set_eq
       variables:
         preset: int
       then:
-        - dfplayer.set_eq: !lambda 'return static_cast<dfplayer::EqPreset>(preset);'
+        - dfplayer.set_eq: !lambda "return static_cast<dfplayer::EqPreset>(preset);"
 
     - service: dfplayer_sleep
       then:
@@ -144,21 +146,21 @@ api:
       then:
         - tm1651.set_level_percent:
             id: tm1651_battery
-            level_percent: !lambda 'return level_percent;'
+            level_percent: !lambda "return level_percent;"
     - service: battery_level
       variables:
         level: int
       then:
         - tm1651.set_level:
             id: tm1651_battery
-            level: !lambda 'return level;'
+            level: !lambda "return level;"
     - service: battery_brightness
       variables:
         brightness: int
       then:
         - tm1651.set_brightness:
             id: tm1651_battery
-            brightness: !lambda 'return brightness;'
+            brightness: !lambda "return brightness;"
     - service: battery_turn_on
       then:
         - tm1651.turn_on:
@@ -167,10 +169,17 @@ api:
       then:
         - tm1651.turn_off:
             id: tm1651_battery
+    - service: pid_set_control_parameters
+      then:
+        - climate.pid.set_control_parameters:
+            id: pid_climate
+            kp: 1.0
+            kd: 1.0
+            ki: 1.0
 
 wifi:
-  ssid: 'MySSID'
-  password: 'password1'
+  ssid: "MySSID"
+  password: "password1"
 
 i2c:
   sda: 4
@@ -183,9 +192,13 @@ spi:
   miso_pin: GPIO14
 
 uart:
-  tx_pin: GPIO1
-  rx_pin: GPIO3
-  baud_rate: 115200
+  - tx_pin: GPIO1
+    rx_pin: GPIO3
+    baud_rate: 115200
+
+  - id: adalight_uart
+    rx_pin: GPIO3
+    baud_rate: 115200
 
 ota:
   safe_mode: True
@@ -202,10 +215,18 @@ deep_sleep:
   run_duration: 20s
   sleep_duration: 50s
 
+wled:
+
+adalight:
+
 sensor:
   - platform: apds9960
     type: proximity
     name: APDS9960 Proximity
+  - platform: vl53l0x
+    name: "VL53L0x Distance"
+    address: 0x29
+    update_interval: 60s
   - platform: apds9960
     type: clear
     name: APDS9960 Clear
@@ -221,7 +242,7 @@ sensor:
   - platform: homeassistant
     entity_id: sensor.hello_world
     id: ha_hello_world
-  - platform: aht10  
+  - platform: aht10
     temperature:
       name: "Temperature"
     humidity:
@@ -240,7 +261,7 @@ sensor:
       - filter_out: NAN
       - sliding_window_moving_average:
       - exponential_moving_average:
-      - lambda: 'return 0;'
+      - lambda: "return 0;"
       - delta: 100
       - throttle: 100ms
       - debounce: 500s
@@ -360,9 +381,45 @@ sensor:
       name: "PM2.5"
     pm_10_0:
       name: "PM10.0"
+    aqi:
+      name: "AQI"
+      calculation_type: "AQI"
+  - platform: pmsx003
+    type: PMSX003
+    pm_1_0:
+      name: "PM 1.0 Concentration"
+    pm_2_5:
+      name: "PM 2.5 Concentration"
+    pm_10_0:
+      name: "PM 10.0 Concentration"
+  - platform: pmsx003
+    type: PMS5003T
+    pm_2_5:
+      name: "PM 2.5 Concentration"
+    temperature:
+      name: "PMS Temperature"
+    humidity:
+      name: "PMS Humidity"
+  - platform: pmsx003
+    type: PMS5003ST
+    pm_2_5:
+      name: "PM 2.5 Concentration"
+    temperature:
+      name: "PMS Temperature"
+    humidity:
+      name: "PMS Humidity"
+    formaldehyde:
+      name: "PMS Formaldehyde Concentration"
+  - platform: cse7766
+    voltage:
+      name: "CSE7766 Voltage"
+    current:
+      name: "CSE7766 Current"
+    power:
+      name: "CSE776 Power"
 
 time:
-- platform: homeassistant
+  - platform: homeassistant
 
 apds9960:
   address: 0x20
@@ -381,7 +438,7 @@ binary_sensor:
       - invert
       - delayed_on: 20ms
       - delayed_off: 20ms
-      - lambda: 'return false;'
+      - lambda: "return false;"
     on_state:
       - logger.log: New state
     id: my_binary_sensor
@@ -516,10 +573,10 @@ switch:
         name: Custom Switch
 
 custom_component:
-   lambda: |-
-     auto s = new CustomComponent();
-     s->set_update_interval(15000);
-     return {s};
+  lambda: |-
+    auto s = new CustomComponent();
+    s->set_update_interval(15000);
+    return {s};
 
 stepper:
   - platform: uln2003
@@ -550,13 +607,13 @@ interval:
         target: 500
     - stepper.set_target:
         id: my_stepper
-        target: !lambda 'return 0;'
+        target: !lambda "return 0;"
     - stepper.report_position:
         id: my_stepper2
         position: 0
     - stepper.report_position:
         id: my_stepper
-        position: !lambda 'return 50/100.0;'
+        position: !lambda "return 50/100.0;"
 
 climate:
   - platform: bang_bang
@@ -573,6 +630,73 @@ climate:
     away_config:
       default_target_temperature_low: 16°C
       default_target_temperature_high: 20°C
+  - platform: thermostat
+    name: Thermostat Climate
+    sensor: ha_hello_world
+    default_target_temperature_low: 18°C
+    default_target_temperature_high: 24°C
+    idle_action:
+      - switch.turn_on: gpio_switch1
+    cool_action:
+      - switch.turn_on: gpio_switch2
+    heat_action:
+      - switch.turn_on: gpio_switch1
+    dry_action:
+      - switch.turn_on: gpio_switch2
+    fan_only_action:
+      - switch.turn_on: gpio_switch1
+    auto_mode:
+      - switch.turn_on: gpio_switch2
+    off_mode:
+      - switch.turn_on: gpio_switch1
+    heat_mode:
+      - switch.turn_on: gpio_switch2
+    cool_mode:
+      - switch.turn_on: gpio_switch1
+    dry_mode:
+      - switch.turn_on: gpio_switch2
+    fan_only_mode:
+      - switch.turn_on: gpio_switch1
+    fan_mode_auto_action:
+      - switch.turn_on: gpio_switch2
+    fan_mode_on_action:
+      - switch.turn_on: gpio_switch1
+    fan_mode_off_action:
+      - switch.turn_on: gpio_switch2
+    fan_mode_low_action:
+      - switch.turn_on: gpio_switch1
+    fan_mode_medium_action:
+      - switch.turn_on: gpio_switch2
+    fan_mode_high_action:
+      - switch.turn_on: gpio_switch1
+    fan_mode_middle_action:
+      - switch.turn_on: gpio_switch2
+    fan_mode_focus_action:
+      - switch.turn_on: gpio_switch1
+    fan_mode_diffuse_action:
+      - switch.turn_on: gpio_switch2
+    swing_off_action:
+      - switch.turn_on: gpio_switch1
+    swing_horizontal_action:
+      - switch.turn_on: gpio_switch2
+    swing_vertical_action:
+      - switch.turn_on: gpio_switch1
+    swing_both_action:
+      - switch.turn_on: gpio_switch2
+    hysteresis: 0.2
+    away_config:
+      default_target_temperature_low: 16°C
+      default_target_temperature_high: 20°C
+  - platform: pid
+    id: pid_climate
+    name: "PID Climate Controller"
+    sensor: ha_hello_world
+    default_target_temperature: 21°C
+    heat_output: my_slow_pwm
+    control_parameters:
+      kp: 0.0
+      ki: 0.0
+      kd: 0.0
 
 cover:
   - platform: endstop
@@ -594,13 +718,13 @@ cover:
           frequency: 500.0Hz
       - output.esp8266_pwm.set_frequency:
           id: out
-          frequency: !lambda 'return 500.0;'
+          frequency: !lambda "return 500.0;"
       - servo.write:
           id: my_servo
           level: -100%
       - servo.write:
           id: my_servo
-          level: !lambda 'return -1.0;'
+          level: !lambda "return -1.0;"
       - delay: 2s
       - servo.detach: my_servo
     close_duration: 4.5min
@@ -627,7 +751,6 @@ cover:
           id: out
           level: !lambda "return pos;"
 
-
 output:
   - platform: esp8266_pwm
     id: out
@@ -653,12 +776,18 @@ output:
     id: dimmer1
     gate_pin: GPIO5
     zero_cross_pin: GPIO12
+  - platform: slow_pwm
+    pin: GPIO5
+    id: my_slow_pwm
+    period: 15s
 
 mcp23017:
   id: mcp23017_hub
 
 mcp23008:
   id: mcp23008_hub
+
+e131:
 
 light:
   - platform: neopixelbus
@@ -668,11 +797,19 @@ light:
     variant: SK6812
     method: ESP8266_UART0
     num_leds: 100
+    effects:
+      - wled:
+      - adalight:
+          uart_id: adalight_uart
+      - e131:
+          universe: 1
 
 servo:
   id: my_servo
   output: out
   restore: true
+  min_level: $min_sub
+  max_level: $max_sub
 
 ttp229_lsf:
 
@@ -687,22 +824,22 @@ sim800l:
         str = sender;
         str = message;
     - sim800l.send_sms:
-        message: 'hello you'
-        recipient: '+1234'
+        message: "hello you"
+        recipient: "+1234"
 
 dfplayer:
   on_finished_playback:
     then:
       if:
         condition:
-          not:
-            dfplayer.is_playing
+          not: dfplayer.is_playing
         then:
-          logger.log: 'Playback finished event'
+          logger.log: "Playback finished event"
 tm1651:
   id: tm1651_battery
   clk_pin: D6
   dio_pin: D5
+
 rf_bridge:
   on_code_received:
     - lambda: |-
@@ -717,3 +854,14 @@ rf_bridge:
         high: 0x1234
         code: 0x123456
     - rf_bridge.learn
+
+display:
+  - platform: max7219digit
+    cs_pin: GPIO15
+    num_chips: 4
+    rotate_chip: 0
+    intensity: 10
+    scroll_mode: "STOP"
+    id: my_matrix
+    lambda: |-
+      it.printdigit("hello");

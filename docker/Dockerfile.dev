@@ -1,11 +1,11 @@
-FROM esphome/esphome-base-amd64:2.0.1
+FROM esphome/esphome-base-amd64:2.5.0
 
 COPY . .
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        python3-wheel \
-        net-tools \
+    python3-wheel \
+    net-tools \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
