@@ -22,7 +22,6 @@ class HM3301Component : public PollingComponent, public i2c::I2CDevice {
   void set_aqi_calculation_type(AQICalculatorType aqi_calc_type) { aqi_calc_type_ = aqi_calc_type; }
 
   void setup() override;
-  void dump_config() override;
   float get_setup_priority() const override;
   void update() override;
 

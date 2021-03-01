@@ -236,6 +236,7 @@ class IntLiteral(Literal):
     __slots__ = ("i", )
 
     def __init__(self, i: int):
+
         super().__init__()
         self.i = i
 
