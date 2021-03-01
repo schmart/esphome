@@ -67,6 +67,7 @@ enum WaveshareEPaperTypeAModel {
   WAVESHARE_EPAPER_1_54_IN = 0,
   WAVESHARE_EPAPER_2_13_IN,
   WAVESHARE_EPAPER_2_9_IN,
+  WAVESHARE_EPAPER_2_9_IN_V2,
   TTGO_EPAPER_2_13_IN,
   TTGO_EPAPER_2_13_IN_B73,
 };
@@ -87,6 +88,14 @@ class WaveshareEPaperTypeA : public WaveshareEPaper {
     this->data(0xc3);
     this->command(0x20);
     this->command(0x10);
+    // if (this->model_ == WAVESHARE_EPAPER_2_9_IN_V2) {
+    //   // COMMAND DEEP SLEEP MODE
+    //   this->command(0x10);
+    //   this->data(0x01);
+    // } else {
+    //   // COMMAND DEEP SLEEP MODE
+    //   this->command(0x10);
+    // }
     this->wait_until_idle_();
   }
 
