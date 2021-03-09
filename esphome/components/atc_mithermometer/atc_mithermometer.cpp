@@ -54,7 +54,7 @@ bool ATCMiThermometer::parse_device(const esp32_ble_tracker::ESPBTDevice &device
 }
 
 optional<ParseResult> ATCMiThermometer::parse_header(const esp32_ble_tracker::ServiceData &service_data) {
-  ParseResult result;
+  // ParseResult result;
   if (!service_data.uuid.contains(0x1A, 0x18)) {
     ESP_LOGVV(TAG, "parse_header(): no service data UUID magic bytes.");
     return {};
@@ -65,13 +65,13 @@ optional<ParseResult> ATCMiThermometer::parse_header(const esp32_ble_tracker::Se
   static uint8_t last_frame_count = 0;
   if (last_frame_count == raw[12]) {
     ESP_LOGVV(TAG, "parse_header(): duplicate data packet received (%d).", static_cast<int>(last_frame_count));
-    result.is_duplicate = true;
+    this->resultData.is_duplicate = true;
     return {};
   }
   last_frame_count = raw[12];
-  result.is_duplicate = false;
+  this->resultData.is_duplicate = false;
 
-  return result;
+  return this->resultData;
 }
 
 bool ATCMiThermometer::parse_message(const std::vector<uint8_t> &message, ParseResult &result) {
